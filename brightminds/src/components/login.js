@@ -1,22 +1,44 @@
 import React, { useState } from 'react';
-import '../css/login.css';
 import { useNavigate } from 'react-router-dom';
+import '../css/login.css'; // Ensure to import your CSS file
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    // Handle login logic here (e.g., API calls)
-    console.log('Email:', email, 'Password:', password);
-    if (email === 'test@gmail.com' && password === '123') {
-      navigate('/home'); // Navigate to ListenandLearnPage
-  } else {
-      console.log('Invalid credentials');// Handle invalid login
-  }
-    
+    console.log('Logging in with:', { email, password }); // Log the input values
+
+    try {
+      const response = await fetch('http://localhost:5000/api/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      console.log('Response:', response); // Log the response object
+
+      if (response.ok) {
+        const teacherData = await response.json(); // Parse the response data
+        localStorage.setItem('teacherEmail', teacherData.email); // Correctly save the email
+        console.log('Fetching students for teacher:', teacherData);
+        console.log('Logged in successfully:', teacherData); // Log teacher data
+
+        // Redirect to the home page after successful login
+        navigate('/home'); 
+      } else {
+        const errorData = await response.json(); // Parse the error response
+        console.log('Error response:', errorData);
+        alert('Invalid credentials, please try again.'); // Alert for invalid credentials
+      }
+    } catch (error) {
+      console.error('Login error:', error); // Log any error that occurs
+      alert('An error occurred while logging in.'); // Alert for general errors
+    }
   };
 
   return (

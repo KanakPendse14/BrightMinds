@@ -63,7 +63,7 @@ const Navbar = ({ studentName, profilePhoto }) => {
       </div>
       <div className="navbar-right">
         <div className="student-info">
-          <span className="student-name">{studentName}</span>
+          <span className="student-name">{}</span>
           <img src={profilePhoto} alt="Profile" className="profile-photo" />
         </div>
       </div>
@@ -72,3 +72,4 @@ const Navbar = ({ studentName, profilePhoto }) => {
 };
 
 export default Navbar;
+
